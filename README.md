@@ -1,6 +1,11 @@
 # backend_webflux
 This project is based on webflux
 
+## 🚀 How to start
+
+```` bash
+   docker-compose up
+````
 
 ## ⚒️ 커밋 컨벤션
 
