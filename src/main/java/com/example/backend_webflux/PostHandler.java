@@ -2,11 +2,17 @@ package com.example.backend_webflux;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -69,5 +75,18 @@ public class PostHandler {
     Mono<Void> deleted = postRepository.deleteById(id);
 
     return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(deleted, Void.class);
+  }
+
+  public Mono<ServerResponse> getAllPostsPaging(ServerRequest request) {
+    Pageable pageable = PageRequest.of(0,3);
+
+    Flux<Post> pages = request
+        .queryParam("title")
+        .map(title -> postRepository.findByTitleContains(title, pageable))
+        .orElseGet(() -> postRepository.findAll());
+
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(pages, Post.class);
   }
 }
