@@ -13,11 +13,12 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 public class PostRouter {
+
   @Bean
   public RouterFunction<ServerResponse> routePost(PostHandler postHandler) {
     return RouterFunctions
         .route(GET("/api/post")
-            , postHandler::getAllPosts)
+            , postHandler::getAllPostsPaging)
         .andRoute(GET("/api/post/{id}")
             , postHandler::getPost)
         .andRoute(POST("/api/post")
