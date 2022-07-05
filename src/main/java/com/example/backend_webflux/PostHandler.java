@@ -2,11 +2,8 @@ package com.example.backend_webflux;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -83,7 +80,7 @@ public class PostHandler {
     Flux<Post> pages = request
         .queryParam("title")
         .map(title -> postRepository.findByTitleContains(title, pageable))
-        .orElseGet(() -> postRepository.findAll());
+        .orElseGet(postRepository::findAll);
 
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
