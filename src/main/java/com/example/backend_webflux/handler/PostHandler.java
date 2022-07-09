@@ -1,7 +1,12 @@
-package com.example.backend_webflux;
+package com.example.backend_webflux.handler;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
+import com.example.backend_webflux.domain.Post;
+import com.example.backend_webflux.dto.PostDto;
+import com.example.backend_webflux.repository.PostRepository;
+import com.example.backend_webflux.repository.UserRepository;
+import com.example.backend_webflux.util.AppUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,10 +21,13 @@ import reactor.core.publisher.Mono;
 public class PostHandler {
 
   private final PostRepository postRepository;
+  private final UserRepository userRepository;
 
 
-  public PostHandler(PostRepository postRepository) {
+  public PostHandler(PostRepository postRepository,
+      UserRepository userRepository) {
     this.postRepository = postRepository;
+    this.userRepository = userRepository;
   }
 
   public Mono<ServerResponse> getAllPosts(ServerRequest request) {
@@ -29,7 +37,7 @@ public class PostHandler {
   }
 
   public Mono<ServerResponse> getPost(ServerRequest request) {
-    Integer id = Integer.valueOf(request.pathVariable("id"));
+    String id = request.pathVariable("id");
 
     return postRepository.findById(id)
         .flatMap(post -> ServerResponse.ok()
@@ -50,7 +58,7 @@ public class PostHandler {
 
   public Mono<ServerResponse> modifyPost(ServerRequest request) {
     Mono<Post> unsavedPost = request.bodyToMono(Post.class);
-    Integer id = Integer.valueOf(request.pathVariable("id"));
+    String id = request.pathVariable("id");
 
     Mono<Post> updatedPost = unsavedPost.flatMap(post ->
         postRepository.findById(id)
@@ -67,7 +75,7 @@ public class PostHandler {
   }
 
   public Mono<ServerResponse> deletePost(ServerRequest request) {
-    Integer id = Integer.valueOf(request.pathVariable("id"));
+    String id = request.pathVariable("id");
 
     Mono<Void> deleted = postRepository.deleteById(id);
 
@@ -85,5 +93,29 @@ public class PostHandler {
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
         .body(pages, Post.class);
+  }
+
+  public Mono<ServerResponse> getUserPosts(ServerRequest request) {
+    String userId = request.pathVariable("userId");
+
+    Flux<Post> posts = userRepository.findById(userId)
+        .flatMapMany(u -> postRepository.findByUserId(u.getId())); // Null
+
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(posts, Post.class)
+        .switchIfEmpty(ServerResponse.notFound().build());
+  }
+
+  public Mono<ServerResponse> createPostByUserId(ServerRequest request) {
+    String userId = request.pathVariable("userId");
+    Mono<PostDto> dto = request.bodyToMono(PostDto.class);
+    Mono<Post> post = userRepository.findById(userId)
+            .flatMap(u -> dto.map(AppUtils::dtoToEntity)
+            .doOnNext(e -> e.setUserId(u.getId()))
+        ).flatMap(postRepository::insert);
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(post, Post.class);
   }
 }
