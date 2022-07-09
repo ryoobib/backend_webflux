@@ -1,7 +1,9 @@
-package com.example.backend_webflux;
+package com.example.backend_webflux.handler;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
+import com.example.backend_webflux.domain.User;
+import com.example.backend_webflux.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -26,7 +28,7 @@ public class UserHandler {
   }
 
   public Mono<ServerResponse> getUser(ServerRequest request) {
-    Integer id = Integer.valueOf(request.pathVariable("id"));
+    String id = request.pathVariable("id");
 
     return userRepository.findById(id)
         .flatMap(user -> ServerResponse.ok()
@@ -49,7 +51,7 @@ public class UserHandler {
 
   public Mono<ServerResponse> modifyUser(ServerRequest request) {
     Mono<User> unsavedUser = request.bodyToMono(User.class);
-    Integer id = Integer.valueOf(request.pathVariable("id"));
+    String id = request.pathVariable("id");
 
     Mono<User> updatedUser = unsavedUser.flatMap(user ->
         userRepository.findById(id)
@@ -67,7 +69,7 @@ public class UserHandler {
   }
 
   public Mono<ServerResponse> deleteUser(ServerRequest request) {
-    Integer id = Integer.valueOf(request.pathVariable("id"));
+    String id = request.pathVariable("id");
     Mono<Void> deleted = userRepository.deleteById(id);
 
     return ServerResponse.ok()
