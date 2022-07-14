@@ -2,3 +2,13 @@ spring:
   data:
     mongodb:
       uri: mongodb://0.0.0.0:27017/ryoobibRepository
+com:
+  example:
+    backend_webflux:
+      springdoc:
+        api:
+          router:
+            separete:
+              enabled: false
+            common:
+              enabled: true
