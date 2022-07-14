@@ -1,9 +1,8 @@
-package com.example.backend_webflux.annotation;
+package com.example.backend_webflux.annotation.user;
 
 import com.example.backend_webflux.domain.User;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,20 +22,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
         method = RequestMethod.GET,
         operation =
         @Operation(
-            description = "Get all users ",
-            operationId = "getAllUser",
+            description = "Get user by id",
+            operationId = "getUser",
             tags = "users",
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Get all users endpoint",
+                    description = "Get user by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                            schema = @Schema(implementation = User.class))
                     }),
                 @ApiResponse(
                     responseCode = "400",
+                    description = "Bad Request response",
+                    content = {
+                        @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExceptionResponse.class))
+                    }),
+                @ApiResponse(
+                    responseCode = "404",
                     description = "Not found response",
                     content = {
                         @Content(
@@ -45,6 +52,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface GetAllUserApiInfo {
+public @interface GetUserByIdApiInfo {
 
 }

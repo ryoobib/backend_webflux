@@ -1,4 +1,4 @@
-package com.example.backend_webflux.annotation;
+package com.example.backend_webflux.annotation.user;
 
 import com.example.backend_webflux.domain.User;
 import exception.ExceptionResponse;
@@ -19,28 +19,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @RouterOperations({
     @RouterOperation(
-        method = RequestMethod.GET,
+        method = RequestMethod.DELETE,
         operation =
         @Operation(
-            description = "Get user by id",
-            operationId = "getUser",
+            description = "Delete user by id",
+            operationId = "deleteUser",
             tags = "users",
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Get user by id response",
+                    description = "Delete user by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = User.class))
-                    }),
-                @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request response",
-                    content = {
-                        @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ExceptionResponse.class))
                     }),
                 @ApiResponse(
                     responseCode = "404",
@@ -52,6 +44,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface GetUserByIdApiInfo {
+public @interface DeleteUserByIdApiInfo {
 
 }

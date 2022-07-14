@@ -5,11 +5,11 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 
-import com.example.backend_webflux.annotation.CreateUserApiInfo;
-import com.example.backend_webflux.annotation.DeleteUserByIdApiInfo;
-import com.example.backend_webflux.annotation.GetAllUserApiInfo;
-import com.example.backend_webflux.annotation.GetUserByIdApiInfo;
-import com.example.backend_webflux.annotation.ModifyUserByIdApiInfo;
+import com.example.backend_webflux.annotation.user.CreateUserApiInfo;
+import com.example.backend_webflux.annotation.user.DeleteUserByIdApiInfo;
+import com.example.backend_webflux.annotation.user.GetAllUserApiInfo;
+import com.example.backend_webflux.annotation.user.GetUserByIdApiInfo;
+import com.example.backend_webflux.annotation.user.ModifyUserByIdApiInfo;
 import com.example.backend_webflux.handler.UserHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

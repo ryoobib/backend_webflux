@@ -1,4 +1,4 @@
-package com.example.backend_webflux.annotation;
+package com.example.backend_webflux.annotation.user;
 
 import com.example.backend_webflux.domain.User;
 import exception.ExceptionResponse;
@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @RouterOperations({
     @RouterOperation(
-        method = RequestMethod.POST,
+        method = RequestMethod.PUT,
         operation =
         @Operation(
-            description = "Create user",
-            operationId = "createUser",
+            description = "Modify user by id",
+            operationId = "modifyUser",
             tags = "users",
             requestBody =
             @RequestBody(
-                description = "User to create",
+                description = "User to modify",
                 required = true,
                 content = @Content(schema = @Schema(implementation = User.class,
                     requiredProperties = {"name"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Create user response",
+                    description = "Modify user by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -48,9 +48,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExceptionResponse.class))
+                    }),
+                @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found response",
+                    content = {
+                        @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExceptionResponse.class))
                     })
             }))
 })
-public @interface CreateUserApiInfo {
+public @interface ModifyUserByIdApiInfo {
 
 }
