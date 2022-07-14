@@ -7,6 +7,10 @@ This project is based on webflux
    docker-compose up
 ````
 
+## 🧾 Development progress
+[개발 계획 노션 페이지 바로가기](https://sleepy-cartwheel-ace.notion.site/28bec245cd274a62978daa2faf0f2cd5?v=dc25530ae50a4adf8d3c8410305f55af)
+
+
 ## ⚒️ 커밋 컨벤션
 
 ### Structure
