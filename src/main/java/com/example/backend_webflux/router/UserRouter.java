@@ -5,6 +5,11 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 
+import com.example.backend_webflux.annotation.CreateUserApiInfo;
+import com.example.backend_webflux.annotation.DeleteUserByIdApiInfo;
+import com.example.backend_webflux.annotation.GetAllUserApiInfo;
+import com.example.backend_webflux.annotation.GetUserByIdApiInfo;
+import com.example.backend_webflux.annotation.ModifyUserByIdApiInfo;
 import com.example.backend_webflux.handler.UserHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,17 +21,44 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class UserRouter {
 
   @Bean
-  public RouterFunction<ServerResponse> routeUser(UserHandler userHandler) {
+  @GetAllUserApiInfo
+  public RouterFunction<ServerResponse> getAllUserRouter(UserHandler userHandler) {
     return RouterFunctions
         .route(GET("/api/user")
-        , userHandler::getAllUser)
-        .andRoute(GET("/api/user/{id}")
-        , userHandler::getUser)
-        .andRoute(POST("api/user")
-        , userHandler::createUser)
-        .andRoute(PUT("api/user/{id}")
-        , userHandler::modifyUser)
-        .andRoute(DELETE("api/user/{id}")
-        , userHandler::deleteUser);
+            , userHandler::getAllUser)
+        ;
   }
+
+  @Bean
+  @GetUserByIdApiInfo
+  public RouterFunction<ServerResponse> getUserRouter(UserHandler userHandler) {
+    return RouterFunctions
+        .route(GET("/api/user/{id}")
+            , userHandler::getUser);
+  }
+
+  @Bean
+  @CreateUserApiInfo
+  public RouterFunction<ServerResponse> createUserRouter(UserHandler userHandler) {
+    return RouterFunctions
+        .route(POST("api/user")
+            , userHandler::createUser);
+  }
+
+  @Bean
+  @ModifyUserByIdApiInfo
+  public RouterFunction<ServerResponse> modifyUserRouter(UserHandler userHandler) {
+    return RouterFunctions
+        .route(PUT("api/user/{id}")
+            , userHandler::modifyUser);
+  }
+
+  @Bean
+  @DeleteUserByIdApiInfo
+  public RouterFunction<ServerResponse> deleteUserRouter(UserHandler userHandler) {
+    return RouterFunctions
+        .route(DELETE("api/user/{id}")
+            , userHandler::deleteUser);
+  }
+
 }
