@@ -1,7 +1,8 @@
 package com.example.backend_webflux.domain;
 
 import java.sql.Timestamp;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,11 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Builder
 @NoArgsConstructor
@@ -28,7 +26,10 @@ public class User {
   private String name;
 
   @CreatedDate
-  private Timestamp createdAt;
+  private Date createdAt;
+
+  @Version
+  private Integer version;
 
 //  @ReadOnlyProperty
 //  @DocumentReference(lookup="{'userId':?#{#self._id} }")
