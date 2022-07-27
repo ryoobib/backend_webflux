@@ -38,21 +38,21 @@ public class PostRouter {
             , postHandler::getPost);
   }
 
-  @Bean
-  @GetPostByUserIdApiInfo
-  public RouterFunction<ServerResponse> getPostByUserIdRouter(PostHandler postHandler) {
-    return RouterFunctions
-        .route(GET("/api/post/{userId}/user")
-            , postHandler::getUserPosts);
-  }
+//  @Bean
+//  @GetPostByUserIdApiInfo
+//  public RouterFunction<ServerResponse> getPostByUserIdRouter(PostHandler postHandler) {
+//    return RouterFunctions
+//        .route(GET("/api/post/{userId}/user")
+//            , postHandler::getUserPosts);
+//  }
 
-  @Bean
-  @CreatePostApiInfo
-  public RouterFunction<ServerResponse> createPostRouter(PostHandler postHandler) {
-    return RouterFunctions
-        .route(POST("/api/post")
-            , postHandler::createPost);
-  }
+//  @Bean
+//  @CreatePostApiInfo
+//  public RouterFunction<ServerResponse> createPostRouter(PostHandler postHandler) {
+//    return RouterFunctions
+//        .route(POST("/api/post")
+//            , postHandler::createPost);
+//  }
 
   @Bean
   @CreatePostByUserIdApiInfo

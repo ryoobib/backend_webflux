@@ -1,15 +1,12 @@
 package com.example.backend_webflux.handler;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromValue;
-
 import com.example.backend_webflux.domain.Post;
 import com.example.backend_webflux.dto.PostDto;
 import com.example.backend_webflux.repository.PostRepository;
 import com.example.backend_webflux.repository.UserRepository;
-import com.example.backend_webflux.util.AppUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -39,22 +36,20 @@ public class PostHandler {
   public Mono<ServerResponse> getPost(ServerRequest request) {
     String id = request.pathVariable("id");
 
-    return postRepository.findById(id)
-        .flatMap(post -> ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(fromValue(post))
-        ).switchIfEmpty(ServerResponse.notFound().build());
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(postRepository.findById(id), Post.class);
   }
 
-  public Mono<ServerResponse> createPost(ServerRequest request) {
-    Mono<Post> unsavedPost = request.bodyToMono(Post.class);
-    return unsavedPost
-        .flatMap(post -> postRepository.save(post)
-            .flatMap(savedPost -> ServerResponse.accepted()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(fromValue(savedPost)))
-        ).switchIfEmpty(ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build());
-  }
+//  public Mono<ServerResponse> createPost(ServerRequest request) {
+//    Mono<Post> unsavedPost = request.bodyToMono(Post.class);
+//    return unsavedPost
+//        .flatMap(post -> postRepository.save(post)
+//            .flatMap(savedPost -> ServerResponse.accepted()
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body(fromValue(savedPost)))
+//        ).switchIfEmpty(ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build());
+//  }
 
   public Mono<ServerResponse> modifyPost(ServerRequest request) {
     Mono<Post> unsavedPost = request.bodyToMono(Post.class);
@@ -64,14 +59,14 @@ public class PostHandler {
         postRepository.findById(id)
             .flatMap(oldPost -> {
               post.setId(id);
+              post.setUser(oldPost.getUser());
+              post.setStatus(1);
               return postRepository.save(post);
             }));
 
-    return updatedPost.flatMap(post ->
-        ServerResponse.accepted()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(fromValue(post))
-    ).switchIfEmpty(ServerResponse.notFound().build());
+    return ServerResponse.accepted()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(updatedPost, Post.class);
   }
 
   public Mono<ServerResponse> deletePost(ServerRequest request) {
@@ -95,25 +90,27 @@ public class PostHandler {
         .body(pages, Post.class);
   }
 
-  public Mono<ServerResponse> getUserPosts(ServerRequest request) {
-    String userId = request.pathVariable("userId");
-
-    Flux<Post> posts = userRepository.findById(userId)
-        .flatMapMany(u -> postRepository.findByUserId(u.getId())); // Null
-
-    return ServerResponse.ok()
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(posts, Post.class)
-        .switchIfEmpty(ServerResponse.notFound().build());
-  }
 
   public Mono<ServerResponse> createPostByUserId(ServerRequest request) {
-    String userId = request.pathVariable("userId");
+
     Mono<PostDto> dto = request.bodyToMono(PostDto.class);
-    Mono<Post> post = userRepository.findById(userId)
-            .flatMap(u -> dto.map(AppUtils::dtoToEntity)
-            .doOnNext(e -> e.setUserId(u.getId()))
-        ).flatMap(postRepository::insert);
+    Mono<Post> post =
+        dto.flatMap(d ->
+          userRepository.findById(d.getUserId())
+              .flatMap(user -> {
+                Post p = new Post();
+                BeanUtils.copyProperties(d, p);
+                p.setStatus(0);
+                p.setUser(user);
+                return postRepository.insert(p);
+              })
+        );
+
+
+//        userRepository.findById(userId)
+//            .flatMap(u -> dto.map(AppUtils::dtoToEntity)
+//            .doOnNext(e -> e.setUser(u))
+//        ).flatMap(postRepository::insert);
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
         .body(post, Post.class);

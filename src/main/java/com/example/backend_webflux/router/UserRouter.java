@@ -41,7 +41,7 @@ public class UserRouter {
   @CreateUserApiInfo
   public RouterFunction<ServerResponse> createUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(POST("api/user")
+        .route(POST("/api/user")
             , userHandler::createUser);
   }
 
@@ -49,7 +49,7 @@ public class UserRouter {
   @ModifyUserByIdApiInfo
   public RouterFunction<ServerResponse> modifyUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(PUT("api/user/{id}")
+        .route(PUT("/api/user/{id}")
             , userHandler::modifyUser);
   }
 
@@ -57,7 +57,7 @@ public class UserRouter {
   @DeleteUserByIdApiInfo
   public RouterFunction<ServerResponse> deleteUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(DELETE("api/user/{id}")
+        .route(DELETE("/api/user/{id}")
             , userHandler::deleteUser);
   }
 
