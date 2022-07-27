@@ -1,10 +1,13 @@
 package com.example.backend_webflux.domain;
 
-import java.sql.Timestamp;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Getter
+@Setter
 @Document
 public class Comment {
 
@@ -12,6 +15,8 @@ public class Comment {
   private Integer id;
   private String content;
 
-  @CreatedDate
-  private Timestamp createdAt;
+  @DBRef
+  private User user;
+  @DBRef
+  private Post post;
 }
