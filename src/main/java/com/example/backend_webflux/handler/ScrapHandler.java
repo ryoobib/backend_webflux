@@ -1,14 +1,10 @@
 package com.example.backend_webflux.handler;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromValue;
-
 import com.example.backend_webflux.domain.Scrap;
+import com.example.backend_webflux.dto.ScrapDto;
 import com.example.backend_webflux.repository.PostRepository;
 import com.example.backend_webflux.repository.ScrapRepository;
 import com.example.backend_webflux.repository.UserRepository;
-import exception.ExceptionResponse;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -42,7 +38,7 @@ public class ScrapHandler {
     String userId = request.pathVariable("userId");
 
     Flux<Scrap> scraps = userRepository.findById(userId)
-        .flatMapMany(u -> scrapRepository.findByUserId(u.getId()))
+        .flatMapMany(scrapRepository::findByUser)
         ;
 
     return ServerResponse.ok()
@@ -52,15 +48,23 @@ public class ScrapHandler {
   }
 
   public Mono<ServerResponse> createScrap(ServerRequest request) {
-    String userId = request.queryParam("userId").orElse("");
-    String postId = request.queryParam("postId").orElse("");
 
-    Mono<Scrap> scrap = userRepository.findById(userId)
-        .map(u -> Scrap.builder().userId(u.getId()).status(0).build())
-        .doOnNext(s -> postRepository.findById(postId)
-            .filter(p -> !p.getUserId().equals(userId))
-            .doOnNext(p -> s.setPostId(p.getId())) // null
-        ).flatMap(scrapRepository::save);
+    Mono<ScrapDto> dto = request.bodyToMono(ScrapDto.class);
+
+    Mono<Scrap> scrap =
+        dto.flatMap(d1 -> userRepository.findById(d1.getUserId())
+            .flatMap(user -> postRepository.findById(d1.getPostId())
+                .flatMap(post -> {
+                  Scrap s = new Scrap();
+                  s.setUser(user);
+                  s.setStatus(0);
+                  s.setPost(post);
+                  return scrapRepository.insert(s);
+                })
+            )
+        );
+
+
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
         .body(scrap, Scrap.class);
@@ -74,10 +78,8 @@ public class ScrapHandler {
           s.setStatus(1);
           return scrapRepository.save(s);
         });
-    return updatedScrap.flatMap(scrap ->
-        ServerResponse.accepted()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(fromValue(scrap))
-    ).switchIfEmpty(ServerResponse.notFound().build());
+    return ServerResponse.accepted()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(updatedScrap, Scrap.class);
   }
 }
