@@ -2,6 +2,15 @@ spring:
   data:
     mongodb:
       uri: mongodb://0.0.0.0:27017/ryoobibRepository
+server:
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  http2:
+    enabled: true
 com:
   example:
     backend_webflux:
