@@ -55,10 +55,10 @@ public class PostRouter {
 //  }
 
   @Bean
-  @CreatePostByUserIdApiInfo
-  public RouterFunction<ServerResponse> createPostByUserIdRouter(PostHandler postHandler) {
+  @CreatePostApiInfo
+  public RouterFunction<ServerResponse> createPostRouter(PostHandler postHandler) {
     return RouterFunctions
-        .route(POST("/api/post/{userId}/user")
+        .route(POST("/api/post")
             , postHandler::createPostByUserId);
   }
 

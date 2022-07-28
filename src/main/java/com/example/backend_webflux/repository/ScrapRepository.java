@@ -12,7 +12,7 @@ public interface ScrapRepository extends ReactiveMongoRepository<Scrap, String> 
 
   
 
-  Mono<Scrap> findByPost(Post p);
+  Mono<Scrap> findByPost(String p);
 
-  Flux<Scrap> findByUser(User u);
+  Flux<Scrap> findByUser(String u);
 }

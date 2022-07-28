@@ -11,6 +11,6 @@ public interface PostRepository extends ReactiveMongoRepository<Post, String> {
 
   Flux<Post> findByTitleContains(String title, Pageable pageable);
 
-  Flux<Post> findByUserId(String userId);
+  Flux<Post> findByUser(String user);
 
 }

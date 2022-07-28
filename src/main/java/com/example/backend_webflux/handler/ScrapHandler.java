@@ -38,7 +38,7 @@ public class ScrapHandler {
     String userId = request.pathVariable("userId");
 
     Flux<Scrap> scraps = userRepository.findById(userId)
-        .flatMapMany(scrapRepository::findByUser)
+        .flatMapMany(user -> scrapRepository.findByUser(user.getId()))
         ;
 
     return ServerResponse.ok()
@@ -56,9 +56,9 @@ public class ScrapHandler {
             .flatMap(user -> postRepository.findById(d1.getPostId())
                 .flatMap(post -> {
                   Scrap s = new Scrap();
-                  s.setUser(user);
+                  s.setUser(user.getId());
                   s.setStatus(0);
-                  s.setPost(post);
+                  s.setPost(post.getId());
                   return scrapRepository.insert(s);
                 })
             )
