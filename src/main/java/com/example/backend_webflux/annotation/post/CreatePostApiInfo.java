@@ -2,6 +2,7 @@ package com.example.backend_webflux.annotation.post;
 
 import com.example.backend_webflux.domain.Post;
 import com.example.backend_webflux.domain.User;
+import com.example.backend_webflux.dto.PostDto;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,8 +32,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
             @RequestBody(
                 description = "Post to create",
                 required = true,
-                content = @Content(schema = @Schema(implementation = Post.class,
-                    requiredProperties = {"title", "content"}))),
+                content = @Content(schema = @Schema(implementation = PostDto.class,
+                    requiredProperties = {"title", "content", "userId"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",
