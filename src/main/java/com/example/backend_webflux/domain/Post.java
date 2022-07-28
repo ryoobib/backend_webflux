@@ -16,7 +16,7 @@ public class Post {
   private String title;
   private String content;
   private Integer status;
-  @DBRef
-  private User user;
+
+  private String user;
 
 }

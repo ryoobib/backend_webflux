@@ -15,8 +15,8 @@ public class Comment {
   private Integer id;
   private String content;
 
-  @DBRef
-  private User user;
-  @DBRef
-  private Post post;
+
+  private String user;
+
+  private String post;
 }

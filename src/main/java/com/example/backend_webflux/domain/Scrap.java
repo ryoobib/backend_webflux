@@ -15,10 +15,10 @@ public class Scrap {
   private String id;
   private Integer status;
 
-  @DBRef
-  private Post post;
-  @DBRef
-  private User user;
+
+  private String post;
+
+  private String user;
 
 
 }

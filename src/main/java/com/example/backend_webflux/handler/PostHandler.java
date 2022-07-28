@@ -101,7 +101,7 @@ public class PostHandler {
                 Post p = new Post();
                 BeanUtils.copyProperties(d, p);
                 p.setStatus(0);
-                p.setUser(user);
+                p.setUser(user.getId());
                 return postRepository.insert(p);
               })
         );
