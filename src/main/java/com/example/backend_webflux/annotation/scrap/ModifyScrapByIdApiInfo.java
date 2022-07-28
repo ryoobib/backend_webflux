@@ -1,8 +1,7 @@
-package com.example.backend_webflux.annotation.post;
+package com.example.backend_webflux.annotation.scrap;
 
-import com.example.backend_webflux.domain.Post;
+import com.example.backend_webflux.domain.Scrap;
 import com.example.backend_webflux.domain.User;
-import com.example.backend_webflux.dto.PostDto;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,26 +21,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @RouterOperations({
     @RouterOperation(
-        method = RequestMethod.POST,
+        method = RequestMethod.PUT,
         operation =
         @Operation(
-            description = "Create post",
-            operationId = "createPost",
-            tags = "posts",
-            requestBody =
-            @RequestBody(
-                description = "Post to create",
-                required = true,
-                content = @Content(schema = @Schema(implementation = PostDto.class,
-                    requiredProperties = {"title", "content", "userId"}))),
+            description = "Modify scrap by id",
+            operationId = "modifyScrap",
+            tags = "scraps",
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Create post response",
+                    description = "Modify user by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Post.class))
+                            schema = @Schema(implementation = Scrap.class))
                     }),
                 @ApiResponse(
                     responseCode = "400",
@@ -50,9 +43,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExceptionResponse.class))
+                    }),
+                @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found response",
+                    content = {
+                        @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ExceptionResponse.class))
                     })
             }))
 })
-public @interface CreatePostApiInfo {
+public @interface ModifyScrapByIdApiInfo {
 
 }

@@ -1,8 +1,8 @@
-package com.example.backend_webflux.annotation.post;
+package com.example.backend_webflux.annotation.scrap;
 
-import com.example.backend_webflux.domain.Post;
+import com.example.backend_webflux.domain.Scrap;
 import com.example.backend_webflux.domain.User;
-import com.example.backend_webflux.dto.PostDto;
+import com.example.backend_webflux.dto.ScrapDto;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,23 +25,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
         method = RequestMethod.POST,
         operation =
         @Operation(
-            description = "Create post",
-            operationId = "createPost",
-            tags = "posts",
+            description = "Create scrap",
+            operationId = "createScrap",
+            tags = "scraps",
             requestBody =
             @RequestBody(
-                description = "Post to create",
+                description = "Scrap to create",
                 required = true,
-                content = @Content(schema = @Schema(implementation = PostDto.class,
-                    requiredProperties = {"title", "content", "userId"}))),
+                content = @Content(schema = @Schema(implementation = ScrapDto.class,
+                    requiredProperties = {"postId, userId"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Create post response",
+                    description = "Create scrap response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Post.class))
+                            schema = @Schema(implementation = Scrap.class))
                     }),
                 @ApiResponse(
                     responseCode = "400",
@@ -53,6 +53,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface CreatePostApiInfo {
+public @interface CreateScrapApiInfo {
 
 }

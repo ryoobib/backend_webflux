@@ -1,13 +1,12 @@
-package com.example.backend_webflux.annotation.post;
+package com.example.backend_webflux.annotation.scrap;
 
-import com.example.backend_webflux.domain.Post;
+import com.example.backend_webflux.domain.Scrap;
 import com.example.backend_webflux.domain.User;
-import com.example.backend_webflux.dto.PostDto;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,30 +21,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @RouterOperations({
     @RouterOperation(
-        method = RequestMethod.POST,
+        method = RequestMethod.GET,
         operation =
         @Operation(
-            description = "Create post",
-            operationId = "createPost",
-            tags = "posts",
-            requestBody =
-            @RequestBody(
-                description = "Post to create",
-                required = true,
-                content = @Content(schema = @Schema(implementation = PostDto.class,
-                    requiredProperties = {"title", "content", "userId"}))),
+            description = "Get all scraps ",
+            operationId = "getAllScrap",
+            tags = "scraps",
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Create post response",
+                    description = "Get all scraps endpoint",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Post.class))
+                            array = @ArraySchema(schema = @Schema(implementation = Scrap.class)))
                     }),
                 @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request response",
+                    description = "Not found response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -53,6 +46,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface CreatePostApiInfo {
+public @interface GetAllScrapApiInfo {
 
 }
