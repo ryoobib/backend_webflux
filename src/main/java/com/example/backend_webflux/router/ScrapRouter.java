@@ -4,6 +4,10 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 
+import com.example.backend_webflux.annotation.scrap.CreateScrapApiInfo;
+import com.example.backend_webflux.annotation.scrap.GetAllScrapApiInfo;
+import com.example.backend_webflux.annotation.scrap.GetScrapByUserIdApiInfo;
+import com.example.backend_webflux.annotation.scrap.ModifyScrapByIdApiInfo;
 import com.example.backend_webflux.handler.ScrapHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +19,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class ScrapRouter {
 
   @Bean
+  @GetAllScrapApiInfo
   public RouterFunction<ServerResponse> getAllScrapRouter(ScrapHandler scrapHandler) {
     return RouterFunctions
         .route(GET("/api/scrap")
@@ -23,6 +28,7 @@ public class ScrapRouter {
   }
 
   @Bean
+  @GetScrapByUserIdApiInfo
   public RouterFunction<ServerResponse> getScrapByUserId(ScrapHandler scrapHandler) {
     return RouterFunctions
         .route(GET("/api/scrap/{userId}")
@@ -31,6 +37,7 @@ public class ScrapRouter {
   }
 
   @Bean
+  @CreateScrapApiInfo
   public RouterFunction<ServerResponse> createScrap(ScrapHandler scrapHandler) {
     return RouterFunctions
         .route(POST("/api/scrap")
@@ -39,6 +46,7 @@ public class ScrapRouter {
   }
 
   @Bean
+  @ModifyScrapByIdApiInfo
   public RouterFunction<ServerResponse> modifyScrap(ScrapHandler scrapHandler) {
     return RouterFunctions
         .route(PUT("/api/scrap/{scrapId}")
