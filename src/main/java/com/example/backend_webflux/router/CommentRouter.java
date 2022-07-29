@@ -5,6 +5,10 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 
+import com.example.backend_webflux.annotation.comment.CreateCommentApiInfo;
+import com.example.backend_webflux.annotation.comment.DeleteCommentApiInfo;
+import com.example.backend_webflux.annotation.comment.GetAllCommentApiInfo;
+import com.example.backend_webflux.annotation.comment.ModifyCommentApiInfo;
 import com.example.backend_webflux.handler.CommentHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +20,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 public class CommentRouter {
 
   @Bean
+  @GetAllCommentApiInfo
   public RouterFunction<ServerResponse> getAllComment(CommentHandler commentHandler) {
     return RouterFunctions
         .route(GET("/api/comment")
@@ -23,6 +28,7 @@ public class CommentRouter {
   }
 
   @Bean
+  @CreateCommentApiInfo
   public RouterFunction<ServerResponse> createComment(CommentHandler commentHandler) {
     return RouterFunctions
         .route(POST("/api/comment")
@@ -30,6 +36,7 @@ public class CommentRouter {
   }
 
   @Bean
+  @ModifyCommentApiInfo
   public RouterFunction<ServerResponse> modifyComment(CommentHandler commentHandler) {
     return RouterFunctions
         .route(PUT("/api/comment/{id}")
@@ -37,6 +44,7 @@ public class CommentRouter {
   }
 
   @Bean
+  @DeleteCommentApiInfo
   public RouterFunction<ServerResponse> deleteComment(CommentHandler commentHandler) {
     return RouterFunctions
         .route(DELETE("/api/comment/{id}")
