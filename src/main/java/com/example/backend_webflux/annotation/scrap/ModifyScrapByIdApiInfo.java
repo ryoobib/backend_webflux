@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Modify user by id response",
+                    description = "Modify scrap by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
