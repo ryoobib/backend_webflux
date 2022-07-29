@@ -1,4 +1,4 @@
-package exception;
+package com.example.backend_webflux.exception;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;

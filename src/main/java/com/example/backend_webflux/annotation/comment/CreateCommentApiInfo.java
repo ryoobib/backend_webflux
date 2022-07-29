@@ -1,10 +1,8 @@
 package com.example.backend_webflux.annotation.comment;
 
 import com.example.backend_webflux.domain.Comment;
-import com.example.backend_webflux.domain.Scrap;
 import com.example.backend_webflux.dto.CommentDto;
-import com.example.backend_webflux.dto.ScrapDto;
-import exception.ExceptionResponse;
+import com.example.backend_webflux.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -5,7 +5,6 @@ import com.example.backend_webflux.dto.CommentDto;
 import com.example.backend_webflux.repository.CommentRepository;
 import com.example.backend_webflux.repository.PostRepository;
 import com.example.backend_webflux.repository.UserRepository;
-import exception.ExceptionResponse;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
