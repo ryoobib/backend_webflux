@@ -1,7 +1,8 @@
-package com.example.backend_webflux.annotation.scrap;
+package com.example.backend_webflux.annotation.comment;
 
+import com.example.backend_webflux.domain.Comment;
 import com.example.backend_webflux.domain.Scrap;
-import com.example.backend_webflux.domain.User;
+import com.example.backend_webflux.dto.CommentDto;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,17 +25,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
         method = RequestMethod.PUT,
         operation =
         @Operation(
-            description = "Modify scrap by id",
-            operationId = "modifyScrap",
-            tags = "scraps",
+            description = "Modify comment by id",
+            operationId = "modifyComment",
+            tags = "comments",
+            requestBody =
+            @RequestBody(
+                description = "Comment to modify",
+                required = true,
+                content = @Content(schema = @Schema(implementation = CommentDto.class,
+                    requiredProperties = {"content", "postId", "userId"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Modify scrap by id response",
+                    description = "Modify comment by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Scrap.class))
+                            schema = @Schema(implementation = Comment.class))
                     }),
                 @ApiResponse(
                     responseCode = "400",
@@ -54,6 +61,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface ModifyScrapByIdApiInfo {
+public @interface ModifyCommentApiInfo {
 
 }

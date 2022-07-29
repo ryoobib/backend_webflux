@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
                 description = "Scrap to create",
                 required = true,
                 content = @Content(schema = @Schema(implementation = ScrapDto.class,
-                    requiredProperties = {"postId, userId"}))),
+                    requiredProperties = {"postId","userId"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",

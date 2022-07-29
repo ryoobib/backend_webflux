@@ -1,12 +1,11 @@
-package com.example.backend_webflux.annotation.scrap;
+package com.example.backend_webflux.annotation.comment;
 
-import com.example.backend_webflux.domain.Scrap;
+import com.example.backend_webflux.domain.Comment;
 import com.example.backend_webflux.domain.User;
 import exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,28 +20,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @RouterOperations({
     @RouterOperation(
-        method = RequestMethod.PUT,
+        method = RequestMethod.DELETE,
         operation =
         @Operation(
-            description = "Modify scrap by id",
-            operationId = "modifyScrap",
-            tags = "scraps",
+            description = "Delete comment by id",
+            operationId = "deleteComment",
+            tags = "comments",
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Modify scrap by id response",
+                    description = "Delete comment by id response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Scrap.class))
-                    }),
-                @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request response",
-                    content = {
-                        @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ExceptionResponse.class))
+                            schema = @Schema(implementation = Comment.class))
                     }),
                 @ApiResponse(
                     responseCode = "404",
@@ -54,6 +45,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface ModifyScrapByIdApiInfo {
+public @interface DeleteCommentApiInfo {
 
 }
