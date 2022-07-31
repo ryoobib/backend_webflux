@@ -11,6 +11,7 @@ import com.example.backend_webflux.annotation.user.GetAllUserApiInfo;
 import com.example.backend_webflux.annotation.user.GetUserByIdApiInfo;
 import com.example.backend_webflux.annotation.user.ModifyUserByIdApiInfo;
 import com.example.backend_webflux.handler.UserHandler;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -19,6 +20,12 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 public class UserRouter {
+
+  @Bean
+  public WebProperties.Resources resources(){
+    return new WebProperties.Resources();
+  }
+
 
   @Bean
   @GetAllUserApiInfo
