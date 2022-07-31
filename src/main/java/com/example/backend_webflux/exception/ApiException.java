@@ -3,7 +3,7 @@ package com.example.backend_webflux.exception;
 import lombok.Getter;
 
 @Getter
-public class ApiException extends RuntimeException {
+public class ApiException extends Exception {
 
   private final ApiExceptionEnum error;
 

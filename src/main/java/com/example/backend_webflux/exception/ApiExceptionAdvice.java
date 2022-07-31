@@ -1,39 +1,50 @@
 package com.example.backend_webflux.exception;
 
+import java.util.Map;
 import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.web.WebProperties;
+import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.boot.web.reactive.error.ErrorAttributes;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Mono;
 
-@Slf4j
-@RestControllerAdvice
-public class ApiExceptionAdvice {
+@Component
+public class ApiExceptionAdvice extends AbstractErrorWebExceptionHandler {
 
-  @ExceptionHandler(ApiException.class)
-  public ResponseEntity<ExceptionResponse> exceptionHandler(ApiException e) {
-    ApiExceptionEnum exception = e.getError();
-    log.error(exception.getHttpStatus().getReasonPhrase(), e);
 
-    return ResponseEntity.status(exception.getStatus()).body(
-        ExceptionResponse.builder().status(exception.getStatus()).message(exception.getMessage())
-            .build());
+  public ApiExceptionAdvice(ErrorAttributes errorAttributes, WebProperties.Resources resources,
+      ApplicationContext applicationContext, ServerCodecConfigurer configurer) {
+    super(errorAttributes, resources, applicationContext);
+    this.setMessageReaders(configurer.getReaders());
+    this.setMessageWriters(configurer.getWriters());
   }
 
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<ExceptionResponse> validationExceptionHandler(
-      ConstraintViolationException e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-        ExceptionResponse.builder().status(HttpStatus.BAD_REQUEST.value()).message(e.getMessage())
-            .build());
+  @Override
+  protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
+    return RouterFunctions.route(RequestPredicates.all(),this::renderException);
   }
 
-  @ExceptionHandler(NullPointerException.class)
-  public ResponseEntity<ExceptionResponse> notFoundExceptionHandler(
-      ConstraintViolationException e) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-        ExceptionResponse.builder().status(HttpStatus.NOT_FOUND.value()).message(e.getMessage())
-            .build());
+  private Mono<ServerResponse> renderException(ServerRequest request) {
+    Map<String, Object> error = this.getErrorAttributes(request, ErrorAttributeOptions.defaults());
+    error.remove("status");
+    error.remove("requestId");
+    return ServerResponse.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromValue(error));
+
   }
 }
