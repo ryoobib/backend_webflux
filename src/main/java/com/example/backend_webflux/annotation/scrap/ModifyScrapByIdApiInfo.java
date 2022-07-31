@@ -1,12 +1,10 @@
 package com.example.backend_webflux.annotation.scrap;
 
 import com.example.backend_webflux.domain.Scrap;
-import com.example.backend_webflux.domain.User;
-import exception.ExceptionResponse;
+import com.example.backend_webflux.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

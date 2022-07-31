@@ -1,9 +1,8 @@
 package com.example.backend_webflux.annotation.post;
 
 import com.example.backend_webflux.domain.Post;
-import com.example.backend_webflux.domain.User;
 import com.example.backend_webflux.dto.PostDto;
-import exception.ExceptionResponse;
+import com.example.backend_webflux.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
