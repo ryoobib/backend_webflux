@@ -3,6 +3,8 @@ spring:
     mongodb:
       uri: mongodb://0.0.0.0:27017/ryoobibRepository
 server:
+  error:
+    include-message: always
   servlet:
     context-path: /
   compression:
