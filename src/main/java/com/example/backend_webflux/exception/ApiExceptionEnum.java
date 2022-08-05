@@ -10,11 +10,18 @@ public enum ApiExceptionEnum {
 
   BAD_REQUEST_EXCEPTION(HttpStatus.BAD_REQUEST, "요청 변수를 확인해주세요."),
   UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "인증이 실패하였습니다."),
-  WRITER_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "작성자가 아닙니다."),
   ACCESS_DENIED_EXCEPTION(HttpStatus.FORBIDDEN, "제한된 접근입니다."),
   NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "요청한 자원이 없습니다."),
   DUPLICATION_VALUE_EXCEPTION(HttpStatus.CONFLICT, "이미 존재하는 값입니다."),
-  INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버가 응답하지 않습니다.")
+  INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버가 응답하지 않습니다."),
+
+  // user
+  WRITER_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "작성자가 아닙니다."),
+  USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "등록된 유저가 없습니다."),
+
+  // PSOT
+
+  POST_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "등록된 포스트가 없습니다."),
   ;
 
   private final HttpStatus httpStatus;
