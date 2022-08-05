@@ -6,11 +6,9 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 
 import com.example.backend_webflux.annotation.post.CreatePostApiInfo;
-import com.example.backend_webflux.annotation.post.CreatePostByUserIdApiInfo;
 import com.example.backend_webflux.annotation.post.DeletePostByIdApiInfo;
 import com.example.backend_webflux.annotation.post.GetAllPostApiInfo;
 import com.example.backend_webflux.annotation.post.GetPostByIdApiInfo;
-import com.example.backend_webflux.annotation.post.GetPostByUserIdApiInfo;
 import com.example.backend_webflux.annotation.post.ModifyPostByIdApiInfo;
 import com.example.backend_webflux.handler.PostHandler;
 import org.springframework.context.annotation.Bean;
@@ -37,22 +35,6 @@ public class PostRouter {
         .route(GET("/api/post/{id}")
             , postHandler::getPost);
   }
-
-//  @Bean
-//  @GetPostByUserIdApiInfo
-//  public RouterFunction<ServerResponse> getPostByUserIdRouter(PostHandler postHandler) {
-//    return RouterFunctions
-//        .route(GET("/api/post/{userId}/user")
-//            , postHandler::getUserPosts);
-//  }
-
-//  @Bean
-//  @CreatePostApiInfo
-//  public RouterFunction<ServerResponse> createPostRouter(PostHandler postHandler) {
-//    return RouterFunctions
-//        .route(POST("/api/post")
-//            , postHandler::createPost);
-//  }
 
   @Bean
   @CreatePostApiInfo
