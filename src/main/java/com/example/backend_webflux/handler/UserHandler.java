@@ -46,14 +46,9 @@ public class UserHandler {
 
     Mono<User> saved = unsavedUser.flatMap(userService::create);
 
-    return saved.flatMap(data -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(data))
-        .switchIfEmpty(ServerResponse.notFound().build())
-        .onErrorResume(error -> {
-          if(error instanceof ApiException) {
-            return ServerResponse.status(((ApiException) error).getError().getStatus()).bodyValue(((ApiException) error).getError().getMessage());
-          }
-          return ServerResponse.status(500).build();
-        });
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(saved, User.class);
   }
 
   public Mono<ServerResponse> modifyUser(ServerRequest request) {
@@ -62,25 +57,17 @@ public class UserHandler {
 
     Mono<User> updatedUser = unsavedUser.flatMap(u -> userService.modify(id, u));
 
-    return updatedUser.flatMap(data -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(data))
-        .onErrorResume(error -> {
-          if(error instanceof ApiException) {
-            return ServerResponse.status(((ApiException) error).getError().getStatus()).bodyValue(((ApiException) error).getError().getMessage());
-          }
-          return ServerResponse.status(500).build();
-        });
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(updatedUser, User.class);
   }
 
   public Mono<ServerResponse> deleteUser(ServerRequest request) {
     String id = request.pathVariable("id");
     Mono<Void> deleted = userService.delete(id);
 
-    return deleted.flatMap(data -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).build())
-        .onErrorResume(error -> {
-          if(error instanceof ApiException) {
-            return ServerResponse.status(((ApiException) error).getError().getStatus()).bodyValue(((ApiException) error).getError().getMessage());
-          }
-          return ServerResponse.status(500).build();
-        });
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(deleted, Void.class);
   }
 }

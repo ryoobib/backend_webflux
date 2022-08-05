@@ -4,10 +4,8 @@ import com.example.backend_webflux.domain.User;
 import com.example.backend_webflux.exception.ApiException;
 import com.example.backend_webflux.exception.ApiExceptionEnum;
 import com.example.backend_webflux.repository.UserRepository;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -43,11 +41,13 @@ public class UserService {
   public Mono<User> modify(String id, User user) {
     return userRepository.findById(id)
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)))
-        .flatMap(u -> {
-              u.setName(user.getName());
-              return userRepository.save(u);
-            })
-        ;
+        .flatMap(result -> userRepository.findByName(user.getName())
+            .switchIfEmpty(Mono.defer(() -> {
+              result.setName(user.getName());
+              return userRepository.save(result);
+            }))
+            .flatMap(duplicated -> Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION)))
+        );
 
   }
 
