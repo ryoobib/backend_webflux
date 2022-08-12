@@ -10,6 +10,7 @@ import com.example.backend_webflux.annotation.user.DeleteUserByIdApiInfo;
 import com.example.backend_webflux.annotation.user.GetAllUserApiInfo;
 import com.example.backend_webflux.annotation.user.GetUserByIdApiInfo;
 import com.example.backend_webflux.annotation.user.ModifyUserByIdApiInfo;
+import com.example.backend_webflux.handler.AuthHandler;
 import com.example.backend_webflux.handler.UserHandler;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
@@ -68,4 +69,10 @@ public class UserRouter {
             , userHandler::deleteUser);
   }
 
+  @Bean
+  public RouterFunction<ServerResponse> login(AuthHandler authHandler) {
+    return RouterFunctions
+        .route(POST("/api/user/login")
+        , authHandler::login);
+  }
 }
