@@ -1,11 +1,7 @@
 package com.example.backend_webflux.handler;
 
 import com.example.backend_webflux.domain.User;
-import com.example.backend_webflux.exception.ApiException;
-import com.example.backend_webflux.exception.ApiExceptionEnum;
-import com.example.backend_webflux.repository.UserRepository;
 import com.example.backend_webflux.service.UserService;
-import com.mongodb.internal.connection.Server;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
