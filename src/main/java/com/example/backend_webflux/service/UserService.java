@@ -1,12 +1,12 @@
 package com.example.backend_webflux.service;
 
 import com.example.backend_webflux.domain.User;
-import com.example.backend_webflux.dto.AuthDto;
 import com.example.backend_webflux.exception.ApiException;
 import com.example.backend_webflux.exception.ApiExceptionEnum;
 import com.example.backend_webflux.repository.UserRepository;
-import com.example.backend_webflux.sercurity.JwtProvider;
 import com.example.backend_webflux.sercurity.PwEncoder;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final JwtProvider jwtProvider;
+  private final SecurityService securityService;
   private final PwEncoder passwordEncoder;
 
   public Mono<User> create(User user) {
@@ -26,6 +26,9 @@ public class UserService {
         .flatMap(result -> {
           if (result.getId() == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setCreatedAt(LocalDateTime.now());
+            user.setRoles(Collections.singletonList("ROLE_USER"));
+            user.setEnabled(true);
             return userRepository.save(result);
           } else {
             return Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION));
@@ -49,6 +52,7 @@ public class UserService {
         .flatMap(result -> userRepository.findByName(user.getName())
             .switchIfEmpty(Mono.defer(() -> {
               result.setName(user.getName());
+              result.setEmail(user.getEmail());
               return userRepository.save(result);
             }))
             .flatMap(duplicated -> Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION)))
@@ -60,10 +64,16 @@ public class UserService {
     return userRepository.deleteById(id);
   }
 
-  public Mono<String> getUserByName(AuthDto.Request dto) {
-    return userRepository.findByName(dto.getName())
-        .filter(user -> passwordEncoder.encode(dto.getPassword()).equals(user.getPassword()))
-        .map(jwtProvider::generateToken)
-        .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.UNAUTHORIZED_EXCEPTION)));
+  public Mono<User> modifyPw(String name, User user) {
+    return userRepository.findByName(name)
+        .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)))
+        .flatMap(result -> {
+          result.setPassword(passwordEncoder.encode(user.getPassword()));
+          return userRepository.save(result);
+        });
+  }
+
+  public Mono<User> getUserByName(String name) {
+    return userRepository.findByName(name);
   }
 }
