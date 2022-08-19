@@ -23,19 +23,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
         method = RequestMethod.POST,
         operation =
         @Operation(
-            description = "Create user",
-            operationId = "createUser",
+            description = "Login",
+            operationId = "login",
             tags = "users",
             requestBody =
             @RequestBody(
-                description = "User to create",
+                description = "login",
                 required = true,
                 content = @Content(schema = @Schema(implementation = User.class,
-                    requiredProperties = {"name", "email", "password"}))),
+                    requiredProperties = {"name", "password"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",
-                    description = "Create user response",
+                    description = "Login response",
                     content = {
                         @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -51,6 +51,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
                     })
             }))
 })
-public @interface CreateUserApiInfo {
+public @interface LoginApiInfo {
 
 }

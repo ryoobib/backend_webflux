@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
                 description = "User to modify",
                 required = true,
                 content = @Content(schema = @Schema(implementation = User.class,
-                    requiredProperties = {"name"}))),
+                    requiredProperties = {"name", "email", "password"}))),
             responses = {
                 @ApiResponse(
                     responseCode = "200",
