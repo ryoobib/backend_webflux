@@ -28,7 +28,6 @@ public class UserHandler {
   @PreAuthorize("hasRole('USER')")
   public Mono<ServerResponse> getUser(ServerRequest request) {
 
-
     Mono<User> user = request.principal()
         .flatMap(auth -> userService.getUserById(auth.getName()));
 

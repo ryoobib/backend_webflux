@@ -5,6 +5,7 @@ import com.example.backend_webflux.domain.User;
 import com.example.backend_webflux.exception.ApiException;
 import com.example.backend_webflux.exception.ApiExceptionEnum;
 import com.example.backend_webflux.repository.UserRepository;
+import com.example.backend_webflux.sercurity.PwEncoder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.Serializable;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SecurityService implements Serializable {
   private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
+  private final PwEncoder pwEncoder;
 
   @Value("${spring.jwt.secret}")
   private String secret;
@@ -71,7 +71,7 @@ public class SecurityService implements Serializable {
           if (!user.isEnabled())
             return Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION));
 
-          if (!passwordEncoder.encode(password).equals(user.getPassword()))
+          if (!pwEncoder.encode(password).equals(user.getPassword()))
             return Mono.error(new ApiException(ApiExceptionEnum.BAD_REQUEST_EXCEPTION));
 
           return Mono.just(generateAccessToken(user).toBuilder()
