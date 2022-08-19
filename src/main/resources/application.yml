@@ -3,13 +3,15 @@ spring:
     mongodb:
       uri: mongodb://0.0.0.0:27017/ryoobibRepository
   jwt:
-    secret: "thisissecretkeyfortestwebfluxprojectwithspringsecurityandjwt"
+    secret: AMDXGbO7gGwf3hoFPpm6GwQvFrqoCsn2
     expiration : 28800
   password :
     encoder:
       secret: "secret"
       iteration: 33
       keylength: 256
+app:
+  public_routes: /api/user/login,/api/user/register,/actuator/**
 server:
   error:
     include-message: always
