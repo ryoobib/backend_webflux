@@ -11,6 +11,7 @@ if you want more information about this project, go to Wiki page.!!
 * MongoDB
 * Docker
 * Swagger
+* Spring Security + JWT
 
 ### 🎈 Build
 Make sure you have installed the following software:
