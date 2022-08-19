@@ -7,8 +7,8 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 
 import com.example.backend_webflux.annotation.user.CreateUserApiInfo;
 import com.example.backend_webflux.annotation.user.DeleteUserByIdApiInfo;
-import com.example.backend_webflux.annotation.user.GetAllUserApiInfo;
 import com.example.backend_webflux.annotation.user.GetUserByIdApiInfo;
+import com.example.backend_webflux.annotation.user.LoginApiInfo;
 import com.example.backend_webflux.annotation.user.ModifyUserByIdApiInfo;
 import com.example.backend_webflux.handler.AuthHandler;
 import com.example.backend_webflux.handler.UserHandler;
@@ -29,19 +29,10 @@ public class UserRouter {
 
 
   @Bean
-  @GetAllUserApiInfo
-  public RouterFunction<ServerResponse> getAllUserRouter(UserHandler userHandler) {
-    return RouterFunctions
-        .route(GET("/api/user")
-            , userHandler::getAllUser)
-        ;
-  }
-
-  @Bean
   @GetUserByIdApiInfo
   public RouterFunction<ServerResponse> getUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(GET("/api/user/{id}")
+        .route(GET("/api/user")
             , userHandler::getUser);
   }
 
@@ -49,7 +40,7 @@ public class UserRouter {
   @CreateUserApiInfo
   public RouterFunction<ServerResponse> createUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(POST("/api/user")
+        .route(POST("/api/user/register")
             , userHandler::createUser);
   }
 
@@ -70,9 +61,17 @@ public class UserRouter {
   }
 
   @Bean
+  @LoginApiInfo
   public RouterFunction<ServerResponse> login(AuthHandler authHandler) {
     return RouterFunctions
         .route(POST("/api/user/login")
         , authHandler::login);
+  }
+
+  @Bean
+  public RouterFunction<ServerResponse> modifyPwRouter(UserHandler userHandler) {
+    return RouterFunctions
+        .route(PUT("/api/user/pw")
+        , userHandler::modifyPw);
   }
 }
