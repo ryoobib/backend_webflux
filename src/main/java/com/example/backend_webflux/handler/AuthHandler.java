@@ -1,11 +1,11 @@
 package com.example.backend_webflux.handler;
 
-import com.example.backend_webflux.dto.AuthDto;
-import com.example.backend_webflux.exception.ApiException;
-import com.example.backend_webflux.exception.ApiExceptionEnum;
-import com.example.backend_webflux.service.UserService;
+import com.example.backend_webflux.domain.Token;
+import com.example.backend_webflux.dto.AuthDto.Request;
+import com.example.backend_webflux.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -18,13 +18,18 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthHandler {
 
-  private final UserService userService;
+  private final SecurityService securityService;
 
   public Mono<ServerResponse> login(ServerRequest request) {
-    Mono<AuthDto.Request> dto = request.bodyToMono(AuthDto.Request.class);
+    Mono<Request> dto = request.bodyToMono(Request.class);
 
-    Mono<String> token = dto.flatMap(userService::getUserByName);
-
-    return token.flatMap(t -> ServerResponse.ok().header("token", t).build());
+    Mono<Token> response =  dto
+        .flatMap(d -> securityService.authenticate(d.getName(), d.getPassword())
+        .map(token -> {
+          Token t = new Token();
+          BeanUtils.copyProperties(token, t);
+          return t;
+        }));
+    return ServerResponse.ok().body(response, Token.class);
   }
 }

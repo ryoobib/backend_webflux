@@ -1,7 +1,10 @@
 package com.example.backend_webflux.sercurity;
 
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -12,25 +15,37 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-@RequiredArgsConstructor
 public class SecurityContextRepository implements ServerSecurityContextRepository {
 
-  private final AuthenticationManager authenticationManager;
+  private static final Logger logger = LoggerFactory.getLogger(SecurityContextRepository.class);
 
+  private static final String TOKEN_PREFIX = "Bearer ";
+
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
   @Override
-  public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
-    throw new UnsupportedOperationException("Not supported yet. ");
+  public Mono save(ServerWebExchange swe, SecurityContext sc) {
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 
   @Override
-  public Mono<SecurityContext> load(ServerWebExchange exchange) {
-    return Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)
-        ).filter(authHeader -> authHeader.startsWith("Bearer "))
-        .flatMap(result -> {
-          String authToken = result.substring(7);
-          Authentication auth = new UsernamePasswordAuthenticationToken(authToken, authToken);
-          return authenticationManager.authenticate(auth).map(SecurityContextImpl::new);
-        });
+  public Mono load(ServerWebExchange swe) {
+    ServerHttpRequest request = swe.getRequest();
+    String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+    String authToken = null;
+    if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
+      authToken = authHeader.replace(TOKEN_PREFIX, "");
+    }else {
+      logger.warn(authHeader + " header value");
+      logger.warn("couldn't find bearer string, will ignore the header.");
+    }
+    if (authToken != null) {
+      Authentication auth = new UsernamePasswordAuthenticationToken(authToken, authToken);
+      return this.authenticationManager.authenticate(auth).map(SecurityContextImpl::new);
+    } else {
+      return Mono.empty();
+    }
   }
+
 }
