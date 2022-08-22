@@ -34,11 +34,11 @@ public class PostService {
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)));
   }
 
-  public Mono<Post> modify(String id, PostDto dto) {
+  public Mono<Post> modify(String id, String userId, PostDto dto) {
     return postRepository.findById(id)
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)))
         .flatMap(result -> {
-          if (result.getUser().equals(dto.getUserId())) {
+          if (result.getUser().equals(userId)) {
             result.setTitle(dto.getTitle());
             result.setContent(dto.getContent());
             result.setStatus(1);
@@ -53,8 +53,8 @@ public class PostService {
     return postRepository.deleteById(id);
   }
 
-  public Mono<Post> create(PostDto dto) {
-    return userRepository.findById(dto.getUserId())
+  public Mono<Post> create(String userId, PostDto dto) {
+    return userRepository.findById(userId)
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)))
         .flatMap(user -> {
           Post p = new Post();

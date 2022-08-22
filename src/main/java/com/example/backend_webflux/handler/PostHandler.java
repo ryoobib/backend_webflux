@@ -34,10 +34,10 @@ public class PostHandler {
   }
 
   public Mono<ServerResponse> modifyPost(ServerRequest request) {
-    Mono<PostDto> unsavedPost = request.bodyToMono(PostDto.class);
-    String id = request.pathVariable("id");
 
-    Mono<Post> updatedPost = unsavedPost.flatMap(dto -> postService.modify(id, dto));
+    String id = request.pathVariable("id");
+    Mono<Post> updatedPost = Mono.zip(request.bodyToMono(PostDto.class), request.principal())
+        .flatMap(z -> postService.modify(id, z.getT2().getName(), z.getT1()));
 
     return ServerResponse.accepted()
         .contentType(MediaType.APPLICATION_JSON)
@@ -67,9 +67,8 @@ public class PostHandler {
 
 
   public Mono<ServerResponse> createPostByUserId(ServerRequest request) {
-
-    Mono<PostDto> dto = request.bodyToMono(PostDto.class);
-    Mono<Post> post = dto.flatMap(postService::create);
+    Mono<Post> post = Mono.zip(request.bodyToMono(PostDto.class), request.principal())
+        .flatMap(z -> postService.create(z.getT2().getName(), z.getT1()));
 
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
