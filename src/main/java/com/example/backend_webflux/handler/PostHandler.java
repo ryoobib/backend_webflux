@@ -47,7 +47,7 @@ public class PostHandler {
   public Mono<ServerResponse> deletePost(ServerRequest request) {
     String id = request.pathVariable("id");
 
-    Mono<Void> deleted = postService.delete(id);
+    Mono<Void> deleted = request.principal().flatMap(auth -> postService.delete(id, auth.getName()));
 
     return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(deleted, Void.class);
   }

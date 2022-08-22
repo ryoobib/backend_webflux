@@ -49,8 +49,14 @@ public class PostService {
         });
   }
 
-  public Mono<Void> delete(String id) {
-    return postRepository.deleteById(id);
+  public Mono<Void> delete(String id, String userId) {
+    return userRepository.findById(userId)
+        .flatMap(writer -> postRepository.findById(id).flatMap(post -> {
+          if( writer.getId().equals(post.getUser())) {
+            return postRepository.deleteById(id);
+          }
+          return Mono.empty();
+        })).switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.WRITER_UNAUTHORIZED_EXCEPTION)));
   }
 
   public Mono<Post> create(String userId, PostDto dto) {
