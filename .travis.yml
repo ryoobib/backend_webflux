@@ -1,3 +1,5 @@
+before_install:
+  - chmod +x gradlew
 language: java
 jdk:
   - openjdk11
@@ -5,7 +7,6 @@ jdk:
 branches:
   only:
     - main
-
 cache:
   directories:
     - '$HOME/.m2/repository'
