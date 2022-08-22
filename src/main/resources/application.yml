@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://0.0.0.0:27017/ryoobibRepository
+      uri: mongodb://0.0.0.0:27017/mongo_test
   jwt:
     secret: AMDXGbO7gGwf3hoFPpm6GwQvFrqoCsn2
     expiration : 28800
@@ -11,7 +11,8 @@ spring:
       iteration: 33
       keylength: 256
 app:
-  public_routes: /api/user/login,/api/user/register,/actuator/**
+  public_routes: /api/user/login,/api/user/register,/actuator/**,/v3/api-docs/**,
+    /webjars/swagger-ui/**
 server:
   error:
     include-message: always
