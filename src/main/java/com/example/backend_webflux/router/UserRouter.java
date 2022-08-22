@@ -2,15 +2,11 @@ package com.example.backend_webflux.router;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 
-import com.example.backend_webflux.annotation.user.CreateUserApiInfo;
 import com.example.backend_webflux.annotation.user.DeleteUserByIdApiInfo;
 import com.example.backend_webflux.annotation.user.GetUserByIdApiInfo;
-import com.example.backend_webflux.annotation.user.LoginApiInfo;
 import com.example.backend_webflux.annotation.user.ModifyUserByIdApiInfo;
-import com.example.backend_webflux.handler.AuthHandler;
 import com.example.backend_webflux.handler.UserHandler;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
@@ -36,19 +32,12 @@ public class UserRouter {
             , userHandler::getUser);
   }
 
-  @Bean
-  @CreateUserApiInfo
-  public RouterFunction<ServerResponse> createUserRouter(UserHandler userHandler) {
-    return RouterFunctions
-        .route(POST("/api/user/register")
-            , userHandler::createUser);
-  }
 
   @Bean
   @ModifyUserByIdApiInfo
   public RouterFunction<ServerResponse> modifyUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(PUT("/api/user/{id}")
+        .route(PUT("/api/user")
             , userHandler::modifyUser);
   }
 
@@ -56,22 +45,8 @@ public class UserRouter {
   @DeleteUserByIdApiInfo
   public RouterFunction<ServerResponse> deleteUserRouter(UserHandler userHandler) {
     return RouterFunctions
-        .route(DELETE("/api/user/{id}")
+        .route(DELETE("/api/user")
             , userHandler::deleteUser);
   }
 
-  @Bean
-  @LoginApiInfo
-  public RouterFunction<ServerResponse> login(AuthHandler authHandler) {
-    return RouterFunctions
-        .route(POST("/api/user/login")
-        , authHandler::login);
-  }
-
-  @Bean
-  public RouterFunction<ServerResponse> modifyPwRouter(UserHandler userHandler) {
-    return RouterFunctions
-        .route(PUT("/api/user/pw")
-        , userHandler::modifyPw);
-  }
 }

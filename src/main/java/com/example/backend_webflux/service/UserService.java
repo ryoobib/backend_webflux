@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final SecurityService securityService;
   private final PwEncoder passwordEncoder;
 
   public Mono<User> create(User user) {
@@ -41,21 +40,17 @@ public class UserService {
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)));
   }
 
-  public Flux<User> getAllUser() {
-    return userRepository.findAll()
-        .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)));
-  }
-
   public Mono<User> modify(String id, User user) {
     return userRepository.findById(id)
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)))
         .flatMap(result -> userRepository.findByName(user.getName())
+//            .flatMap(duplicatedName -> Mono.defer(() -> Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION))))
             .switchIfEmpty(Mono.defer(() -> {
               result.setName(user.getName());
               result.setEmail(user.getEmail());
               return userRepository.save(result);
             }))
-            .flatMap(duplicated -> Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION)))
+//            .flatMap(duplicated -> Mono.error(new ApiException(ApiExceptionEnum.DUPLICATION_VALUE_EXCEPTION)))
         );
 
   }
@@ -64,8 +59,8 @@ public class UserService {
     return userRepository.deleteById(id);
   }
 
-  public Mono<User> modifyPw(String name, User user) {
-    return userRepository.findByName(name)
+  public Mono<User> modifyPw(String id, User user) {
+    return userRepository.findById(id)
         .switchIfEmpty(Mono.error(new ApiException(ApiExceptionEnum.NOT_FOUND_EXCEPTION)))
         .flatMap(result -> {
           result.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -73,7 +68,4 @@ public class UserService {
         });
   }
 
-  public Mono<User> getUserByName(String name) {
-    return userRepository.findByName(name);
-  }
 }
