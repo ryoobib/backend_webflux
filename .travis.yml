@@ -6,15 +6,13 @@ branches:
   only:
     - main
 
-before_install:
-  - chomd +x gradlew
-
 cache:
   directories:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
+script: "./gradlew clean build"
+
 notifications:
   email:
     recipients:
-      - yhy5913@gmail.com
-script: "./gradlew clean build"
+  - yhy5913@gmail.com
