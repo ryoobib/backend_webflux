@@ -17,11 +17,9 @@ public class PostHandler {
 
   private final PostService postService;
 
-
   public PostHandler(PostService postService) {
     this.postService = postService;
   }
-
 
   public Mono<ServerResponse> getPost(ServerRequest request) {
     String id = request.pathVariable("id");
