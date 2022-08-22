@@ -1,3 +1,5 @@
+before_install:
+  - chmod +x gradlew
 language: java
 jdk:
   - openjdk11
@@ -5,14 +7,13 @@ jdk:
 branches:
   only:
     - main
-
 cache:
   directories:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
-script:
-  - './gradlew clean build'
+
+script: "./gradlew clean build"
 notifications:
   email:
     recipients:
-  - yhy5913@gmail.com
+      - yhy5913@gmail.com
